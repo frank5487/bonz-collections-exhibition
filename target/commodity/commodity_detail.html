@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Detail</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/commodity-detail.css">
+</head>
+
+<body>
+<div id="header"></div>
+
+    <!-- detail start -->
+    <div class="wrap">
+
+        <div class="bread_box">
+            <a href="index.html">Index</a><span> &gt;</span>
+            <a href="javascript:void(0);" id="breadboxResult1">NFT</a><span> &gt;</span>
+            <a href="javascript:void(0);" id="breadboxResult2">Monkey with smoking!</a>
+        </div>
+
+        <div class="prosum_box">
+            <dl class="prosum_left">
+                <dt id="dt">
+                    <img alt="" class="big_img" src="images/ws_content_1.jpg" style="width: 570px;height: 340px;">
+                </dt>
+                <dd id="dd">
+                    <a class="up_img up_img_disable"></a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_3.jpg" style="display: none;">
+                        <img src="images/ws_content_3.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_3.jpg" style="display: none;">
+                        <img src="images/ws_content_3.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_3.jpg" style="display: none;">
+                        <img src="images/ws_content_3.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_3.jpg" style="display: none;">
+                        <img src="images/ws_content_3.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg" style="display: none;">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg" style="display: none;">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a title="" class="little_img" data-bigpic="images/ws_content_2.jpg" style="display: none;">
+                        <img src="images/ws_content_2.jpg" style="width: 110px; height: 70px;">
+                    </a>
+                    <a class="down_img down_img_disable" style="margin-bottom: 0;"></a>
+                </dd>
+            </dl>
+            <div class="prosum_right">
+               <p class="pros_title" id="mname">Title Description</p>
+                <p class="hot" id="commodityIntroduce">content</p>
+                <div class="pros_other">
+                    <p>Seller: <span id="sname"></span></p>
+                    <p>Tel: <span id="contactphone"></span></p>
+                    <p>Address: <span id="address"></span></p>
+                </div>
+                <div class="pros_price">
+                    <p class="price"><strong id="price">$2699.00</strong><span>up</span></p>
+                    <p class="collect">
+                        <a class="btn" id="favorite" onclick="javascript:addFavorite();"><i class="glyphicon glyphicon-heart-empty"></i>collect</a>
+
+<!--                        <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>-->
+                        <span id="favoriteCount">collected up to 100</span>
+                    </p>
+                </div>        
+            </div>
+        </div>
+        <div class="you_need_konw">
+            <span>Warning</span>
+            <div class="notice">
+                <p>Warning Content</p>
+            </div>
+        </div>
+    </div>
+    <!-- detail end -->
+
+    <div id="footer"></div>
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/include.js"></script>
+    <script src="js/getParameter.js"></script>
+    <script>
+    $(document).ready(function() {
+        goImg();
+    });
+
+    function goImg() {
+
+        // change small picture display animation
+        $('.little_img').on('mousemove', function() {
+            $('.little_img').removeClass('cur_img');
+            var big_pic = $(this).data('bigpic');
+            $('.big_img').attr('src', big_pic);
+            $(this).addClass('cur_img');
+        });
+
+        // up down toggle
+        var picindex = 0;
+        var nextindex = 4;
+        $('.down_img').on('click',function(){
+            var num = $('.little_img').length;
+            if((nextindex + 1) <= num){
+                $('.little_img:eq('+picindex+')').hide();
+                $('.little_img:eq('+nextindex+')').show();
+                picindex = picindex + 1;
+                nextindex = nextindex + 1;
+            }
+        });
+        $('.up_img').on('click',function(){
+            var num = $('.little_img').length;
+            if(picindex > 0){
+                $('.little_img:eq('+(nextindex-1)+')').hide();
+                $('.little_img:eq('+(picindex-1)+')').show();
+                picindex = picindex - 1;
+                nextindex = nextindex - 1;
+            }
+        });
+        // auto play
+        // var timer = setInterval("auto_play()", 5000);
+    }
+
+    function auto_play() {
+        var cur_index = $('.prosum_left dd').find('a.cur_img').index();
+        cur_index = cur_index - 1;
+        var num = $('.little_img').length;
+        var max_index = 3;
+        if ((num - 1) < 3) {
+            max_index = num - 1;
+        }
+        if (cur_index < max_index) {
+            var next_index = cur_index + 1;
+            var big_pic = $('.little_img:eq(' + next_index + ')').data('bigpic');
+            $('.little_img').removeClass('cur_img');
+            $('.little_img:eq(' + next_index + ')').addClass('cur_img');
+            $('.big_img').attr('src', big_pic);
+        } else {
+            var big_pic = $('.little_img:eq(0)').data('bigpic');
+            $('.little_img').removeClass('cur_img');
+            $('.little_img:eq(0)').addClass('cur_img');
+            $('.big_img').attr('src', big_pic);
+        }
+    }
+
+    $(function() {
+        var mid = getParameter("mid");
+
+        $.get("commodity/findOne", {"mid": mid}, function(data){
+            $("#mname").html(data.mname);
+            $("#commodityIntroduce").html(data.commodityIntroduce);
+            $("#price").html("$"+data.price);
+            $("#sname").html(data.seller.sname);
+            $("#contactphone").html(data.seller.contactphone);
+            $("#address").html(data.seller.address);
+            $("#favoriteCount").html("collected by " +data.count+" people");
+            $("#breadboxResult1").html(data.category.cname);
+            $("#breadboxResult2").html(data.mname);
+
+
+            var dt = '<img alt="" class="big_img" src="'+data.mimage+'" style="width: 570px;height: 340px;">';
+            $("#dt").html(dt);
+
+            // alert(data.commodityImgList.length);
+            var ddstr = '<a class="up_img up_img_disable"></a>';
+            for (var i = 0; i < data.commodityImgList.length; i++) {
+                var astr;
+                if (i >= 4) {
+                    astr = '<a title="" class="little_img" data-bigpic="'+data.commodityImgList[i].bigPic+'" style="display: none;">\n' +
+                        '                        <img src="'+data.commodityImgList[i].smallPic+'" style="width: 110px; height: 70px;">\n' +
+                        '                    </a>';
+                } else {
+                    astr = '<a title="" class="little_img" data-bigpic="'+data.commodityImgList[i].bigPic+'">\n' +
+                        '                        <img src="'+data.commodityImgList[i].smallPic+'" style="width: 110px; height: 70px;">\n' +
+                        '                    </a>';
+                }
+
+                ddstr += astr;
+            }
+            ddstr += '<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>';
+
+            $("#dd").html(ddstr);
+            goImg();
+
+        });
+
+    });
+
+    $(function() {
+       var mid = getParameter("mid");
+       $.get("commodity/isFavorite", {"mid": mid}, function(flag){
+          if (flag) {
+              $("#favorite").addClass("already");
+              $("#favorite").attr("disabled", true);
+              $("#favorite").removeAttr("onclick");
+          }
+       });
+    });
+
+    function addFavorite() {
+        var mid = getParameter("mid");
+        $.get("user/findOne", {}, function(user){
+           if (user) {
+               // alert("login already!");
+               $.get("commodity/addFavorite", {"mid": mid}, function(){
+                  location.reload();
+               });
+           } else {
+               alert("not login in yet, please login!");
+               location.href = "login.html";
+           }
+        });
+    }
+
+    $(function() {
+        var cid = getParameter("cid");
+        $("#breadboxResult1").click(function(){
+           location.href = "commodity_list.html?cid=" + cid;
+        });
+    })
+    </script>
+</body>
+
+</html>

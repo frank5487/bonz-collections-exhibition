@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Collection</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+   <style>
+       .tab-content .row>div {
+        margin-top: 16px;
+       }
+       .tab-content {
+        margin-bottom: 36px;
+       }
+   </style>
+   <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/getParameter.js"></script>
+
+    <script>
+
+        $(function() {
+           var mname = getParameter("mname");
+           if (mname) {
+               mname = decodeURIComponent(mname);
+           }
+
+           loadFavorite(null, null, mname);
+        });
+
+        function loadFavorite(mids, currentPage, mname) {
+            $.get("commodity/pageQueryForCollection", {"mids": mids, "currentPage": currentPage, "mname": mname}, function(pb) {
+                var liHead = "";
+                var firstPage = '<li onclick="javascript:loadFavorite('+mids+',1,\''+mname+'\');"><a href="javascript:void(0);"><<</a></li>';
+
+                var previousNum = pb.currentPage - 1;
+                if (previousNum < 1) {
+                    previousNum = 1;
+                }
+                var previousPage = '<li onclick="javascript:loadFavorite('+mids+','+previousNum+',\''+mname+'\');" class="threeword"><a href="javascript:void(0);"><</a></li>';
+
+                liHead += firstPage;
+                liHead += previousPage;
+
+                var begin;
+                var end;
+
+                // if pagination is less than 10
+                if (pb.totalPage < 10) {
+                    begin = 1;
+                    end = pb.totalPage;
+                } else {
+                    begin = pb.currentPage - 5;
+                    end = pb.currentPage + 4;
+
+                    if (begin < 1) {
+                        begin = 1;
+                        end = begin + 9;
+                    }
+                    if (end > pb.totalPage) {
+                        end = pb.totalPage;
+                        begin = end - 9;
+                    }
+                }
+
+                for (var i = begin; i <= end; i++) {
+                    var li;
+                    if (pb.currentPage == i) {
+                        li = '<li onclick="javascript:loadFavorite('+mids+','+i+',\''+mname+'\');" class="curPage"><a href="javascript:void(0);">'+i+'</a></li>';
+                    } else {
+                        li = '<li onclick="javascript:loadFavorite('+mids+','+i+',\''+mname+'\');"><a href="javascript:void(0);">'+i+'</a></li>';
+                    }
+                    liHead += li;
+                }
+
+                var lastPage = '<li onclick="javascript:loadFavorite('+mids+','+pb.totalPage+',\''+mname+'\');" class="threeword"><a href="javascript:void(0);">>></a></li>';
+                var nextNum = pb.currentPage+1;
+                if (nextNum > pb.totalPage) {
+                    nextNum = pb.totalPage;
+                }
+                var nextPage = '<li onclick="javascript:loadFavorite('+mids+','+nextNum+',\''+mname+'\');" class="threeword"><a href="javascript:void(0);">></a></li>';
+
+                liHead += nextPage;
+                liHead += lastPage;
+
+                $("#paginationNum").html(liHead);
+
+                // 2. show commodity
+                var block = "";
+                for (var i = 0; i < pb.list.length; i++) {
+                    var commodity = pb.list[i];
+                    var bk = '<div class="col-md-3">\n' +
+                        '                                <a href="commodity_detail.html?cid='+commodity.cid+'&mid='+commodity.mid+'">\n' +
+                        '                                    <img src="'+commodity.mimage+'" alt="" style="width: 284px;height: 164px;">\n' +
+                        '                                    <div class="has_border">\n' +
+                        '                                        <h3>'+commodity.commodityIntroduce+'</h3>\n' +
+                        '                                        <div class="price"><strong>$'+commodity.price+'</strong><em>up</em></div>\n' +
+                        '                                    </div>\n' +
+                        '                                </a>\n' +
+                        '                            </div>';
+
+                    block += bk;
+                }
+
+                $("#row_block").html(block);
+            });
+        }
+
+
+        // $(function() {
+        //     $.get("commodity/getCollection", {}, function(data){
+        //         // data:  List<Commodity>
+        //         var block = "";
+        //         for (var i = 0; i < data.length; i++) {
+        //             var commodity = data[i];
+        //             var bk = '<div class="col-md-3">\n' +
+        //                 '                                <a href="commodity_detail.html?cid='+commodity.cid+'&mid='+commodity.mid+'">\n' +
+        //                 '                                    <img src="'+commodity.mimage+'" alt="" style="width: 284px;height: 164px;">\n' +
+        //                 '                                    <div class="has_border">\n' +
+        //                 '                                        <h3>'+commodity.commodityIntroduce+'</h3>\n' +
+        //                 '                                        <div class="price"><strong>$'+commodity.price+'</strong><em>up</em></div>\n' +
+        //                 '                                    </div>\n' +
+        //                 '                                </a>\n' +
+        //                 '                            </div>';
+        //
+        //             block += bk;
+        //         }
+        //
+        //         $("#row_block").html(block);
+        //     });
+        // });
+
+    </script>
+</head>
+<body>
+<div id="header"></div>
+
+<!--collection start-->
+<section id="content">
+    <section class="ws">
+        <div class="ws_top">
+                <div class="ws_tit">
+                    <img src="images/icon_5.jpg" alt="">
+                    <span>My Collection</span>
+                </div>
+            </div>
+            <div class="ws_content">
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <div class="row" id="row_block">
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="commodity_detail.html">
+                                    <img src="images/ws_content_1.jpg" alt="" style="width: 284px;height: 164px;">
+                                    <div class="has_border">
+                                        <h3>Content Description</h3>
+                                        <div class="price"><strong>$889</strong><em>up</em></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pageNum">
+                <ul id="paginationNum">
+                    <li><a href=""><<</a></li>
+                    <li class="threeword"><a href="#"><</a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">6</a></li>
+                    <li><a href="#">7</a></li>
+                    <li><a href="#">8</a></li>
+                    <li><a href="#">9</a></li>
+                    <li><a href="#">10</a></li>
+                    <li class="threeword"><a href="javascript:;">></a></li>
+                    <li class="threeword"><a href="javascript:;">>></a></li>
+                </ul>
+            </div>
+        </section>
+    </section>
+    <!-- collection end-->
+    	
+    <div id="footer"></div>
+    <script type="text/javascript" src="js/include.js"></script>
+</body>
+</html>
